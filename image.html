@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fashion Blog</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(120deg, #ffe6f0, #e6f7ff);
+      color: #333;
+    }
+
+    header {
+      background: #ff3399;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      background: #ff66b2;
+      padding: 0.5rem;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .container {
+      padding: 2rem;
+    }
+
+    .blog-post, .categories, .poll-section, .contact-form {
+      background: white;
+      padding: 1rem;
+      margin: 1rem 0;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .blog-post img {
+      width: 100%;
+      max-height: 400px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    .like-btn, .dislike-btn {
+      background: #ff3399;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      margin-right: 0.5rem;
+      cursor: pointer;
+    }
+
+    .poll-section ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .poll-section li {
+      margin-bottom: 0.5rem;
+    }
+
+    .contact-form input, .contact-form textarea {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .contact-form button {
+      background: #33cc99;
+      color: white;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    @media screen and (max-width: 768px) {
+      nav {
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Fashion Daily</h1>
+    <p>Your go-to source for the latest trends</p>
+  </header>
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#blog">Blog</a>
+    <a href="#poll">Poll</a>
+    <a href="#contact">Contact</a>
+  </nav>
+
+  <div class="container">
+    <!-- Blog Post -->
+    <section class="blog-post" id="blog">
+      <h2>Featured Trend: Boho Chic</h2>
+      <img src="https://via.placeholder.com/800x400?text=Fashion+Image" alt="Fashion Image">
+      <p>Boho Chic is making a big comeback this year with flowy fabrics, layered jewelry, and lots of earthy tones. Explore our styling tips and tricks to rock this look in your own way.</p>
+      <button class="like-btn" onclick="likePost()">Like</button>
+      <button class="dislike-btn" onclick="dislikePost()">Dislike</button>
+    </section>
+
+    <!-- Categories -->
+    <section class="categories">
+      <h2>Explore Categories</h2>
+      <ul>
+        <li>Street Style</li>
+        <li>Formal Wear</li>
+        <li>Casual Outfits</li>
+        <li>Seasonal Trends</li>
+      </ul>
+    </section>
+
+    <!-- Poll Section -->
+    <section class="poll-section" id="poll">
+      <h2>Poll: Your Favorite Fashion Trend</h2>
+      <form id="pollForm">
+        <label><input type="radio" name="trend" value="Boho Chic"> Boho Chic</label><br>
+        <label><input type="radio" name="trend" value="Minimalist"> Minimalist</label><br>
+        <label><input type="radio" name="trend" value="Street Style"> Street Style</label><br>
+        <label><input type="radio" name="trend" value="Vintage"> Vintage</label><br><br>
+        <button type="button" onclick="submitPoll()">Submit Vote</button>
+      </form>
+      <div id="pollResult"></div>
+    </section>
+
+    <!-- Contact Form -->
+    <section class="contact-form" id="contact">
+      <h2>Contact Us</h2>
+      <form>
+        <input type="text" placeholder="Your Name" required>
+        <input type="email" placeholder="Your Email" required>
+        <textarea rows="4" placeholder="Your Message" required></textarea>
+        <button type="submit">Send Message</button>
+      </form>
+    </section>
+  </div>
+
+  <script>
+    function submitPoll() {
+      const pollForm = document.getElementById('pollForm');
+      const formData = new FormData(pollForm);
+      const selectedTrend = formData.get('trend');
+      const resultDiv = document.getElementById('pollResult');
+
+      if (selectedTrend) {
+        let pollResults = JSON.parse(localStorage.getItem('pollResults')) || {};
+        pollResults[selectedTrend] = (pollResults[selectedTrend] || 0) + 1;
+        localStorage.setItem('pollResults', JSON.stringify(pollResults));
+
+        let resultsHTML = `<h4>Thanks for voting!</h4><ul>`;
+        for (let option in pollResults) {
+          resultsHTML += `<li>${option}: ${pollResults[option]} vote(s)</li>`;
+        }
+        resultsHTML += `</ul>`;
+        resultDiv.innerHTML = resultsHTML;
+      } else {
+        resultDiv.innerHTML = `<p style="color:red;">Please select an option before submitting.</p>`;
+      }
+    }
+
+    function likePost() {
+      alert("You liked the post!");
+    }
+
+    function dislikePost() {
+      alert("You disliked the post.");
+    }
+
+    window.onload = function () {
+      const pollResults = JSON.parse(localStorage.getItem('pollResults'));
+      if (pollResults) {
+        let resultDiv = document.getElementById('pollResult');
+        let resultsHTML = `<h4>Poll Results So Far:</h4><ul>`;
+        for (let option in pollResults) {
+          resultsHTML += `<li>${option}: ${pollResults[option]} vote(s)</li>`;
+        }
+        resultsHTML += `</ul>`;
+        resultDiv.innerHTML = resultsHTML;
+      }
+    }
+  </script>
+</body>
+
+</html>

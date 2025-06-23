@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    #game { position: relative; width: 300px; height: 300px; border: 2px solid #000; margin: 20px auto; }
+    #circle {
+      width: 50px; height: 50px; border-radius: 50%; background: crimson;
+      position: absolute; cursor: pointer;
+    }
+    #info { text-align: center; font-family: sans-serif; }
+  </style>
+</head>
+<body>
+  <div id="info">
+    <h3>Score: <span id="score">0</span> | Time: <span id="time">10</span>s</h3>
+  </div>
+  <div id="game">
+    <div id="circle"></div>
+  </div>
+
+  <script>
+    const circle = document.getElementById('circle');
+    const game = document.getElementById('game');
+    let score = 0, timeLeft = 10;
+
+    function moveCircle() {
+      let x = Math.random() * (game.clientWidth - 50);
+      let y = Math.random() * (game.clientHeight - 50);
+      circle.style.left = x + 'px';
+      circle.style.top = y + 'px';
+    }
+
+    circle.onclick = () => {
+      score++;
+      document.getElementById('score').textContent = score;
+      moveCircle();
+    };
+
+    let interval = setInterval(() => {
+      timeLeft--;
+      document.getElementById('time').textContent = timeLeft;
+      if (timeLeft <= 0) {
+        clearInterval(interval);
+        alert("Time's up! Score: " + score);
+        circle.style.display = "none";
+      } else {
+        moveCircle();
+      }
+    }, 1000);
+
+    moveCircle(); // Initial move
+  </script>
+</body>
+</html>
